@@ -25,9 +25,9 @@ const IntroPage = lazy(() => import('./components/IntroPage'));
 // ── Tab definitions ──
 const TABS = [
   { id: 'intro', label: '🏠 Overview', title: 'Project Overview & Theory' },
-  { id: 'simulator', label: '⚙️ Simulator', title: 'Simulator' },
+  { id: 'simulator', label: '⚙️ Simulator', title: 'Pavement Simulator' },
   { id: 'compare', label: '⚖️ Compare', title: 'Comparison Mode' },
-  { id: 'physical-model', label: '🧪 Physical Model & Specs', title: 'Physical Model & Specs' },
+  { id: 'physical-model', label: '🧪 Physical Model', title: 'Physical Scale Model & Specs' },
   { id: 'learn', label: '📚 Learn', title: 'Learning Resources' },
 ] as const;
 
@@ -95,32 +95,38 @@ export default function App() {
 
       {/* ─── HEADER ─── */}
       <header className="border-b border-slate-800 bg-slate-900/95 backdrop-blur-sm sticky top-0 z-30">
-        <div className="max-w-screen-2xl mx-auto px-4 lg:px-8 py-2.5 flex items-center justify-between gap-4">
+        <div className="max-w-screen-2xl mx-auto px-4 lg:px-8 py-2.5 flex items-center justify-between gap-3 sm:gap-4">
           {/* Logo + title */}
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-lg flex-shrink-0">
-              <span className="text-lg">🛣️</span>
+          <div className="flex items-center gap-2.5 min-w-0 flex-shrink-0">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-lg flex-shrink-0">
+              <span className="text-base">🛣️</span>
             </div>
             <div className="min-w-0">
-              <div className="font-bold text-base text-white leading-tight truncate">GeoPave India</div>
-              <div className="text-[11px] text-slate-400 truncate hidden sm:block">
-                Geosynthetic Reinforced Flexible Pavement Simulator (IRC:37 & MoRTH Section 700)
+              <div className="flex items-center gap-2">
+                <span className="font-extrabold text-sm sm:text-base text-white leading-none">GeoPave India</span>
+                <span className="hidden xl:inline-block px-1.5 py-0.5 rounded bg-blue-950 text-blue-300 text-[10px] font-mono border border-blue-800/60 font-semibold">
+                  IRC:37
+                </span>
+              </div>
+              <div className="text-[11px] text-slate-400 truncate hidden lg:block leading-tight mt-0.5 max-w-[260px]">
+                Flexible Pavement Simulator
               </div>
             </div>
           </div>
 
           {/* Nav tabs */}
-          <nav className="flex gap-1 bg-slate-800/60 border border-slate-700/60 rounded-xl p-1">
+          <nav className="flex items-center gap-1 bg-slate-800/70 border border-slate-700/60 rounded-xl p-1 flex-shrink-0 overflow-x-auto scrollbar-hide">
             {TABS.map((tab) => (
               <button
                 key={tab.id}
                 id={`tab-${tab.id}`}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
                   activeTab === tab.id
                     ? 'bg-blue-600 text-white shadow-md shadow-blue-900/50'
                     : 'text-slate-400 hover:text-white hover:bg-slate-700/60'
                 }`}
+                title={tab.title}
               >
                 {tab.label}
               </button>
@@ -128,10 +134,10 @@ export default function App() {
           </nav>
 
           {/* Quick Action Utilities (Classroom Mode, Tour, Export) */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-shrink-0">
             <button
               onClick={() => setShowOnboardingTour(true)}
-              className="hidden lg:flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-xs text-slate-300 font-medium transition"
+              className="hidden lg:flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-xs text-slate-300 font-medium whitespace-nowrap transition"
               title="Start student orientation tour"
             >
               <span>💡</span> Tour
@@ -139,18 +145,18 @@ export default function App() {
 
             <button
               onClick={() => setShowClassroomMode(true)}
-              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-amber-600/40 bg-amber-950/30 hover:bg-amber-900/40 text-xs text-amber-300 font-semibold transition shadow-sm"
+              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-amber-600/40 bg-amber-950/30 hover:bg-amber-900/40 text-xs text-amber-300 font-semibold whitespace-nowrap transition shadow-sm"
               title="High-contrast projector mode for instructors"
             >
-              <span>🎓</span> Classroom Mode
+              <span>🎓</span> Classroom
             </button>
 
             <button
               onClick={() => setShowExportModal(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition shadow-md shadow-blue-900/40"
-              title="Export watermarked simulation report"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold whitespace-nowrap transition shadow-md shadow-blue-900/40"
+              title="Export watermarked simulation report (PDF / JSON)"
             >
-              <span>📄</span> Export Report
+              <span>📄</span> Export
             </button>
           </div>
         </div>
