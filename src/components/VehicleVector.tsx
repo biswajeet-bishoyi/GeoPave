@@ -163,9 +163,9 @@ export const VehicleVector: React.FC<VehicleVectorProps> = ({
         ))}
 
         {/* ── BADGE (Clearly visible with plenty of headroom) ── */}
-        <g transform={`translate(${centerX - 52}, ${bodyY - 18})`}>
-          <rect x="0" y="0" width="104" height="15" rx="3.5" fill="#0f172a" stroke="#3b82f6" strokeWidth="1" />
-          <text x="52" y="11" fill="#93c5fd" fontSize="8.5" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">
+        <g transform={`translate(${centerX - 68}, ${bodyY - 20})`}>
+          <rect x="0" y="0" width="136" height="17" rx="8.5" fill="#0f172a" stroke="#3b82f6" strokeWidth="1.2" />
+          <text x="68" y="9" dominantBaseline="central" fill="#93c5fd" fontSize="8.5" fontWeight="bold" textAnchor="middle" fontFamily="system-ui, sans-serif">
             Passenger Car • 15 kN
           </text>
         </g>
@@ -287,9 +287,9 @@ export const VehicleVector: React.FC<VehicleVectorProps> = ({
         ))}
 
         {/* ── BADGE (Positioned with clear top headroom) ── */}
-        <g transform={`translate(${centerX - 58}, ${bodyY - 18})`}>
-          <rect x="0" y="0" width="116" height="15" rx="3.5" fill="#0f172a" stroke="#0284c7" strokeWidth="1" />
-          <text x="58" y="11" fill="#7dd3fc" fontSize="8.5" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">
+        <g transform={`translate(${centerX - 84}, ${bodyY - 20})`}>
+          <rect x="0" y="0" width="168" height="17" rx="8.5" fill="#0f172a" stroke="#0284c7" strokeWidth="1.2" />
+          <text x="84" y="9" dominantBaseline="central" fill="#7dd3fc" fontSize="8.5" fontWeight="bold" textAnchor="middle" fontFamily="system-ui, sans-serif">
             Intercity Coach • 65 kN Axle
           </text>
         </g>
@@ -419,9 +419,9 @@ export const VehicleVector: React.FC<VehicleVectorProps> = ({
         ))}
 
         {/* ── BADGE (Positioned with clear top headroom) ── */}
-        <g transform={`translate(${centerX - 70}, ${bodyY - 18})`}>
-          <rect x="0" y="0" width="140" height="15" rx="3.5" fill="#0f172a" stroke="#ef4444" strokeWidth="1.2" />
-          <text x="70" y="11" fill="#fecaca" fontSize="8.5" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">
+        <g transform={`translate(${centerX - 92}, ${bodyY - 20})`}>
+          <rect x="0" y="0" width="184" height="17" rx="8.5" fill="#0f172a" stroke="#ef4444" strokeWidth="1.2" />
+          <text x="92" y="9" dominantBaseline="central" fill="#fecaca" fontSize="8.5" fontWeight="bold" textAnchor="middle" fontFamily="system-ui, sans-serif">
             ⚠️ Heavy Axle • 100 kN Footprint
           </text>
         </g>
@@ -532,9 +532,9 @@ export const VehicleVector: React.FC<VehicleVectorProps> = ({
       ))}
 
       {/* ── BADGE (Positioned with clear top headroom) ── */}
-      <g transform={`translate(${centerX - 62}, ${bodyY - 18})`}>
-        <rect x="0" y="0" width="124" height="15" rx="3.5" fill="#0f172a" stroke="#10b981" strokeWidth="1.2" />
-        <text x="62" y="11" fill="#a7f3d0" fontSize="8.5" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">
+      <g transform={`translate(${centerX - 92}, ${bodyY - 20})`}>
+        <rect x="0" y="0" width="184" height="17" rx="8.5" fill="#0f172a" stroke="#10b981" strokeWidth="1.2" />
+        <text x="92" y="9" dominantBaseline="central" fill="#a7f3d0" fontSize="8.5" fontWeight="bold" textAnchor="middle" fontFamily="system-ui, sans-serif">
           Commercial Truck • 80 kN SADW
         </text>
       </g>
