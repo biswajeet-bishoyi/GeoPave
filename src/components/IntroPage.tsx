@@ -86,6 +86,65 @@ export const IntroPage: React.FC = () => {
       </section>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 space-y-16">
+        {/* ─── SECTION 0: WHAT IS THIS PROJECT ABOUT? ─── */}
+        <section className="p-6 sm:p-8 rounded-3xl bg-slate-900/95 border border-blue-900/40 shadow-xl space-y-6">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-950/80 border border-blue-700/50 text-blue-300 text-xs font-semibold">
+              <span>💡</span> IN A NUTSHELL
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+              What is GeoPave India About?
+            </h2>
+            <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-4xl">
+              <strong className="text-white font-semibold">GeoPave India</strong> is an interactive educational and laboratory demonstration project designed to showcase how modern <strong className="text-emerald-400 font-semibold">Geosynthetics (Geogrids &amp; Geotextiles)</strong> reinforce flexible asphalt roads over weak Indian soils—doubling pavement lifespan, preventing potholes and rutting, and cutting construction costs by up to 30%.
+            </p>
+          </div>
+
+          {/* 3 Core Pillars */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+            <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2">
+              <div className="flex items-center gap-2 text-cyan-400 font-bold text-sm">
+                <span className="text-lg">🧪</span> 1. The Physical Model
+              </div>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                A 50 cm transparent acrylic demonstration chamber built at exact 1:10 and 1:5 scale with real gravel, soil, and geosynthetics so visitors and examiners can touch and see aggregate stone interlocking in person.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2">
+              <div className="flex items-center gap-2 text-blue-400 font-bold text-sm">
+                <span className="text-lg">💻</span> 2. The Digital Simulator
+              </div>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                A real-time mechanistic simulation engine that computes dynamic stress dispersion, subgrade resilient modulus (M_R), vertical compressive strain (ε_v), and rutting lifespan for cars, buses, and heavy trucks.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2">
+              <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+                <span className="text-lg">📘</span> 3. Indian Highway Standards
+              </div>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Directly calibrated with IRC:37-2018 (Flexible Pavements), IRC:SP:59-2018 (Geosynthetics in Roads), and MoRTH Section 700 to provide authentic engineering numbers for viva defense and project reports.
+              </p>
+            </div>
+          </div>
+
+          {/* Quick takeaway bar */}
+          <div className="p-3.5 rounded-xl bg-blue-950/40 border border-blue-800/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-blue-200">
+            <div className="flex items-center gap-2">
+              <span className="text-base">🎯</span>
+              <span><strong>Core Question:</strong> Can we build stronger, cheaper, and greener roads over weak soils using geosynthetics instead of just laying more expensive asphalt?</span>
+            </div>
+            <button
+              onClick={handleLaunch}
+              className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold flex-shrink-0 transition"
+            >
+              See It in Action →
+            </button>
+          </div>
+        </section>
+
         {/* ─── SECTION 1: WHY DO WE NEED THIS SIMULATOR? (THE PROBLEM STATEMENT) ─── */}
         <section className="space-y-6">
           <div className="text-center sm:text-left space-y-1">
