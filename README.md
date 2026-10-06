@@ -23,8 +23,8 @@ GeoPave India is designed to teach civil engineering students, educators, and pr
 ### Installation
 
 ```bash
-git clone https://github.com/username/GeoPave-India.git
-cd GeoPave-India
+git clone https://github.com/biswajeet-bishoyi/GeoPave.git
+cd GeoPave
 npm install
 ```
 
@@ -132,12 +132,13 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
 MIT License. See [LICENSE](./LICENSE).
 
-## 👨‍💼 Author
-
-Biswajeet Bishoyi
+## 👨‍💼 Author & Contact
+- **Author:** Biswajeet Bishoyi
+- **Email:** [bishoyibiswajeet@gmail.com](mailto:bishoyibiswajeet@gmail.com)
+- **Repository:** [https://github.com/biswajeet-bishoyi/GeoPave](https://github.com/biswajeet-bishoyi/GeoPave)
 
 ---
 
-**Version:** 0.1.0  
-**Last Updated:** 2026-09-30  
-**Status:** In active development (MVP phase)
+**Version:** 0.2.0  
+**Last Updated:** 2026-10-06  
+**Status:** Exhibition & College Project Ready

@@ -246,7 +246,15 @@ export default function App() {
             <span>·</span>
             <span>MoRTH Section 700</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <a
+              href="mailto:bishoyibiswajeet@gmail.com"
+              className="text-slate-400 hover:text-blue-400 underline underline-offset-2 transition"
+              title="Contact Author"
+            >
+              ✉️ bishoyibiswajeet@gmail.com
+            </a>
+            <span>·</span>
             <button
               onClick={() => setShowTermsModal(true)}
               className="text-amber-400/90 hover:text-amber-300 underline underline-offset-2 transition"

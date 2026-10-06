@@ -41,6 +41,8 @@ export const ReportExportModal: React.FC = () => {
       runHash,
       timestamp,
       modelEngineVersion: '0.2.0',
+      author: 'Biswajeet Bishoyi',
+      contactEmail: 'bishoyibiswajeet@gmail.com',
       standardsCited: ['IRC:37-2018', 'IRC:SP:59-2018', 'MoRTH Section 700'],
       inputConfiguration: {
         pavementMode: controls.pavementMode,
@@ -94,7 +96,7 @@ export const ReportExportModal: React.FC = () => {
             <div>
               <h2 className="text-base font-bold text-white">Engineering Simulation Report</h2>
               <p className="text-xs text-slate-400 font-mono">
-                Run Hash: <span className="text-cyan-400 font-semibold">{runHash}</span> • Engine v0.2.0
+                Run Hash: <span className="text-cyan-400 font-semibold">{runHash}</span> • Engine v0.2.0 • Contact: <a href="mailto:bishoyibiswajeet@gmail.com" className="text-blue-400 underline">bishoyibiswajeet@gmail.com</a>
               </p>
             </div>
           </div>

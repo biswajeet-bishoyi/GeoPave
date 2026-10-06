@@ -96,7 +96,7 @@ export const TermsOfUseModal: React.FC = () => {
           <section className="space-y-1.5">
             <h3 className="font-bold text-white text-sm">4. Contact & Inquiries</h3>
             <p className="text-slate-400">
-              For academic citations, capstone project inquiries, or corrections, contact: <a href="mailto:biswajeet@geopave.edu" className="text-blue-400 underline">biswajeet@geopave.edu</a>.
+              For academic citations, capstone project inquiries, or corrections, contact: <a href="mailto:bishoyibiswajeet@gmail.com" className="text-blue-400 underline">bishoyibiswajeet@gmail.com</a>.
             </p>
           </section>
         </div>

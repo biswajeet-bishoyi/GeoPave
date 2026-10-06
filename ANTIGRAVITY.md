@@ -447,7 +447,7 @@ export function TermsOfUse() {
         <h2>5. Contact for Concerns</h2>
         <p>
           If you believe this tool is being misused for actual design, 
-          please contact: <a href="mailto:legal@geopave.edu">legal@geopave.edu</a>
+          please contact: <a href="mailto:bishoyibiswajeet@gmail.com">bishoyibiswajeet@gmail.com</a>
         </p>
       </section>
     </div>

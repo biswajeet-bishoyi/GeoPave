@@ -522,8 +522,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 MIT License. See [LICENSE](./LICENSE).
 
 ## 👨‍💼 Author
-
-Your Name ([email@example.com](mailto:email@example.com))
+Biswajeet Bishoyi ([bishoyibiswajeet@gmail.com](mailto:bishoyibiswajeet@gmail.com))
 
 ---
 
