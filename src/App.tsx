@@ -20,9 +20,11 @@ import { OnboardingTour } from './components/OnboardingTour';
 const LearnTab = lazy(() => import('./components/LearnTab'));
 const CompareTab = lazy(() => import('./components/CompareTab'));
 const PhysicalModelTab = lazy(() => import('./components/PhysicalModelTab'));
+const IntroPage = lazy(() => import('./components/IntroPage'));
 
 // ── Tab definitions ──
 const TABS = [
+  { id: 'intro', label: '🏠 Overview', title: 'Project Overview & Theory' },
   { id: 'simulator', label: '⚙️ Simulator', title: 'Simulator' },
   { id: 'compare', label: '⚖️ Compare', title: 'Comparison Mode' },
   { id: 'physical-model', label: '🧪 Physical Model & Specs', title: 'Physical Model & Specs' },
@@ -209,6 +211,13 @@ export default function App() {
               </SidebarSection>
             </aside>
           </div>
+        )}
+
+        {/* ── INTRO / OVERVIEW TAB ── */}
+        {activeTab === 'intro' && (
+          <Suspense fallback={<LoadingSpinner />}>
+            <IntroPage />
+          </Suspense>
         )}
 
         {/* ── COMPARE TAB ── */}

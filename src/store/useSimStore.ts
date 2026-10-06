@@ -13,7 +13,7 @@ import { scenarios, type Scenario } from '@data/scenarios';
 
 export type PavementMode = 'conventional' | 'geogrid' | 'geotextile' | 'combined';
 export type AnimationState = 'idle' | 'playing' | 'paused' | 'complete';
-export type ActiveTab = 'simulator' | 'compare' | 'physical-model' | 'learn';
+export type ActiveTab = 'intro' | 'simulator' | 'compare' | 'physical-model' | 'learn';
 
 export interface SimControls {
   pavementMode: PavementMode;
@@ -90,7 +90,7 @@ const defaultControls: SimControls = {
 };
 
 const defaultUI: UIState = {
-  activeTab: 'simulator',
+  activeTab: 'intro',
   selectedLayerId: null,
   animationState: 'idle',
   animationProgress: 0,
