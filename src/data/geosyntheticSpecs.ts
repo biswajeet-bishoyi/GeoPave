@@ -320,7 +320,7 @@ export const PHYSICAL_MODEL_GUIDE: PhysicalModelGuide = {
     },
     {
       question: 'Why must geotextiles have an Apparent Opening Size ($O_{95}$) matched to subgrade soil?',
-      answer: 'To satisfy filtration criteria ($O_{95} \le 2.5 \times D_{85}$ for sandy soils, and $O_{95} \le 0.2\text{ mm}$ for fine soils). If the pores are too large, subgrade fines pump into the GSB; if too small, geotextile clogs and traps pore water pressure.',
+      answer: 'To satisfy filtration criteria ($O_{95} ≤ 2.5 \\times D_{85}$ for sandy soils, and $O_{95} ≤ 0.2\\text{ mm}$ for fine soils). If the pores are too large, subgrade fines pump into the GSB; if too small, geotextile clogs and traps pore water pressure.',
       reference: 'MoRTH Section 702 & IRC:SP:59-2018 Clause 5.2',
     },
   ],

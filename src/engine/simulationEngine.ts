@@ -393,8 +393,8 @@ export function runSimulation(input: SimulationInput): SimulationOutput {
     throw new Error(`Simulation validation failed: ${validation.errors?.join(', ')}`);
   }
 
-  const hasGeogrid = Boolean((input.pavementConfig as any).hasGeogrid ?? input.pavementConfig.geogrid);
-  const hasGeotextile = Boolean((input.pavementConfig as any).hasGeotextile ?? input.pavementConfig.geotextile);
+  const hasGeogrid = Boolean((input.pavementConfig as unknown as Record<string, boolean>).hasGeogrid ?? input.pavementConfig.geogrid);
+  const hasGeotextile = Boolean((input.pavementConfig as unknown as Record<string, boolean>).hasGeotextile ?? input.pavementConfig.geotextile);
 
   const initialLoad = getLoadMagnitude(
     input.trafficConfig.level,

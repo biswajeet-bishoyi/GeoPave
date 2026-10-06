@@ -32,7 +32,7 @@ describe('Simulation Engine', () => {
 
     const invalid = validateInput(createTestInput({
       trafficConfig: {
-        level: 'supersonic' as any,
+        level: 'supersonic' as unknown as SimulationInput['trafficConfig']['level'],
         vehicleType: 'truck',
       },
     }));
