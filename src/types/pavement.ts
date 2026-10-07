@@ -60,9 +60,11 @@ export interface PavementConfiguration {
   layers: LayerDefinition[];
   layerThicknesses?: LayerThicknesses;
   geogrid: boolean;
+  hasGeogrid?: boolean; // Standardized alias for geogrid flag
   geogridPosition?: string; // e.g., 'within-wmm', 'wmm-gsb-interface'
   geogridGradeId?: string;
   geotextile: boolean;
+  hasGeotextile?: boolean; // Standardized alias for geotextile flag
   geotextilePosition?: string; // e.g., 'above-subgrade'
   geotextileGradeId?: string;
 }

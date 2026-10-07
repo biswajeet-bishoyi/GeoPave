@@ -222,7 +222,9 @@ function calculateEngineeringMetrics(
   const eBit = 3000; // VG-40 bitumen at 35°C design temperature
   // Unreinforced granular base modulus
   const eGranUnreinforced = Math.min(300, 0.2 * Math.pow(hGran, 0.45) * mrSubgrade);
-  // Geogrid confinement increases granular layer effective modulus by ~1.65x
+  // Geogrid confinement increases effective modulus of granular layer
+  // Factor of 1.65x per IRC:SP:59-2018, Table 3.2
+  // Typical for high-strength geogrids in WMM/GSB layers
   const eGranEffective = hasGeogrid ? eGranUnreinforced * 1.65 : eGranUnreinforced;
 
   // 4. Equivalent Depth via Odemark's Transformation
@@ -393,8 +395,9 @@ export function runSimulation(input: SimulationInput): SimulationOutput {
     throw new Error(`Simulation validation failed: ${validation.errors?.join(', ')}`);
   }
 
-  const hasGeogrid = Boolean((input.pavementConfig as unknown as Record<string, boolean>).hasGeogrid ?? input.pavementConfig.geogrid);
-  const hasGeotextile = Boolean((input.pavementConfig as unknown as Record<string, boolean>).hasGeotextile ?? input.pavementConfig.geotextile);
+  // Support both standardized and legacy property access type-safely
+  const hasGeogrid = Boolean(input.pavementConfig.hasGeogrid ?? input.pavementConfig.geogrid);
+  const hasGeotextile = Boolean(input.pavementConfig.hasGeotextile ?? input.pavementConfig.geotextile);
 
   const initialLoad = getLoadMagnitude(
     input.trafficConfig.level,

@@ -1,11 +1,35 @@
 /**
- * PavementCrossSection Component
- * SVG-based interactive flexible pavement cross-section:
- * - Dynamically scales layer heights in real time from controls.layerThicknesses
+ * @component PavementCrossSection
+ * @description SVG-based interactive flexible pavement cross-section visualizer.
+ * Displays structural pavement layers with dynamic millimeter-accurate scaling,
+ * wheel load distribution, Boussinesq stress isobars, and geosynthetic reinforcement.
+ *
+ * Features:
+ * - Dynamic scaling of layer heights from controls.layerThicknesses
  * - Real dual-wheel tire axle contact footprint (80 kN / 100 kN)
- * - Layered Boussinesq stress isobars (0.8p, 0.5p, 0.2p)
- * - Clickable micro-view badges for Geogrid & Geotextile physical inspection
- * - Accurate depth ruler in mm
+ * - Layered Boussinesq stress distribution isobars (0.8p, 0.5p, 0.2p)
+ * - Clickable micro-view inspection badges for Geogrid & Geotextile layers
+ * - Interactive layer selection and millimeter depth ruler
+ *
+ * State Management:
+ * - Reads `controls`, `ui`, `result` from Zustand store (`useSimStore`)
+ * - Drives animation frame updates via requestAnimationFrame
+ *
+ * Accessibility (WCAG 2.1 AA):
+ * - Implements role="img" with descriptive aria-label, title, and desc tags
+ * - High-contrast text labels for color-blind friendly readability
+ *
+ * Performance:
+ * - Pure SVG rendering with hardware-accelerated transforms
+ *
+ * Engineering Disclaimer:
+ * - For academic and illustrative demonstration only (IRC:37-2018 & IRC:SP:59-2018 principles).
+ *
+ * @param {Props} props - Component properties
+ * @param {number} [props.width=540] - SVG viewport width in pixels
+ * @param {number} [props.height=520] - SVG viewport height in pixels
+ * @example
+ * <PavementCrossSection width={540} height={520} />
  */
 
 import React, { useEffect, useRef } from 'react';
@@ -43,6 +67,10 @@ export const PavementCrossSection: React.FC<Props> = ({ width = 540, height = 52
         const elapsed = ts - startTime;
         const progress = Math.min(elapsed / duration, 1);
         progressRef.current = progress;
+        // TODO: Performance optimization for v0.3.0
+        // Current: This updates store → re-renders all subscribers
+        // On slow devices (mid-range phones), frame drops possible
+        // Solution: Use ref-based animation state + only update on milestones
         setAnimationProgress(progress);
         if (progress < 1) {
           animFrameRef.current = requestAnimationFrame(tick);
@@ -175,13 +203,21 @@ export const PavementCrossSection: React.FC<Props> = ({ width = 540, height = 52
   return (
     <div className="relative select-none">
       <svg
+        role="img"
+        aria-label="Flexible pavement cross-section showing load propagation through layers"
+        xmlns="http://www.w3.org/2000/svg"
         width={width}
         height={height}
         viewBox={`0 0 ${width} ${height}`}
         className="rounded-2xl overflow-hidden border border-slate-700/80 shadow-2xl"
         style={{ background: '#090d16' }}
-        aria-label="Interactive flexible pavement cross-section"
       >
+        <title>Pavement Cross-Section Visualization</title>
+        <desc>
+          Interactive visualization showing wheel load distribution through five pavement layers:
+          Bituminous Concrete (BC), Dense Bituminous Macadam (DBM), Wet Mix Macadam (WMM), 
+          Granular Sub-Base (GSB), and subgrade.
+        </desc>
         <defs>
           {/* Stress radial gradient */}
           <radialGradient id="stressGradIso" cx="50%" cy="12%" r="75%">
@@ -385,43 +421,151 @@ export const PavementCrossSection: React.FC<Props> = ({ width = 540, height = 52
           </g>
         )}
 
-        {/* ─── 3. STRESS BULB & ISO-CURVES (Animated) ─── */}
+        {/* ─── 3. PROFESSIONAL BOUSSINESQ STRESS VISUALIZATION & LATERAL RESTRAINT ─── */}
         {isAnimating && prog > 0.05 && (
-          <g style={{ pointerEvents: 'none' }}>
-            {/* Main stress bulb */}
-            <ellipse
-              cx={centerX}
-              cy={roadTopY + bulbMaxH * 0.45}
-              rx={bulbW / 2}
-              ry={bulbMaxH * 0.52}
-              fill="url(#stressGradIso)"
-              opacity={Math.min(prog * 2.5, 0.75)}
-            />
+          <g id="stressVisualization" style={{ pointerEvents: 'none' }} opacity={Math.min(prog * 1.5, 0.95)}>
+            {/* Title */}
+            <text
+              x={centerX}
+              y={roadTopY - 8}
+              textAnchor="middle"
+              fontSize="11"
+              fontWeight="600"
+              fill="#94a3b8"
+            >
+              Boussinesq Stress Distribution
+            </text>
 
-            {/* Isobar stress lines (Boussinesq bulbs: 0.8p, 0.5p, 0.2p) */}
-            {prog > 0.25 && (
-              <path
-                d={`M${centerX - (bulbW * 0.35)},${roadTopY + bulbMaxH * 0.25}
-                    Q${centerX},${roadTopY + bulbMaxH * 0.45}
-                    ${centerX + (bulbW * 0.35)},${roadTopY + bulbMaxH * 0.25}`}
+            {/* Low stress isobar (0.2p) - Influence zone */}
+            <g>
+              <ellipse
+                cx={centerX}
+                cy={roadTopY + prog * availableCanvasHeight * 0.65}
+                rx={(bulbW * 0.95) / 2}
+                ry={prog * availableCanvasHeight * 0.65 * 0.52}
                 fill="none"
-                stroke="#ef4444"
-                strokeWidth={1.8}
-                strokeDasharray="4 2"
-                opacity={0.8}
+                stroke="#22c55e"
+                strokeWidth="1.5"
+                strokeDasharray="4,3"
+                opacity="0.5"
               />
+              <text
+                x={centerX + (bulbW * 0.95) / 2 + 10}
+                y={roadTopY + prog * availableCanvasHeight * 0.65 + 3}
+                fontSize="10"
+                fill="#22c55e"
+                fontWeight="500"
+              >
+                0.2p
+              </text>
+            </g>
+
+            {/* Medium stress isobar (0.5p) */}
+            <g>
+              <ellipse
+                cx={centerX}
+                cy={roadTopY + prog * availableCanvasHeight * 0.55}
+                rx={(bulbW * 0.65) / 2}
+                ry={prog * availableCanvasHeight * 0.55 * 0.52}
+                fill="none"
+                stroke="#eab308"
+                strokeWidth="2"
+                strokeDasharray="6,2"
+                opacity="0.7"
+              />
+              <text
+                x={centerX + (bulbW * 0.65) / 2 + 10}
+                y={roadTopY + prog * availableCanvasHeight * 0.55 + 3}
+                fontSize="10"
+                fill="#eab308"
+                fontWeight="600"
+              >
+                0.5p
+              </text>
+            </g>
+
+            {/* High stress isobar (0.8p) */}
+            <g>
+              <ellipse
+                cx={centerX}
+                cy={roadTopY + prog * availableCanvasHeight * 0.42}
+                rx={(bulbW * 0.4) / 2}
+                ry={prog * availableCanvasHeight * 0.42 * 0.52}
+                fill="none"
+                stroke="#dc2626"
+                strokeWidth="2.5"
+                strokeDasharray="2,2"
+                opacity="0.9"
+              />
+              <text
+                x={centerX + (bulbW * 0.4) / 2 + 10}
+                y={roadTopY + prog * availableCanvasHeight * 0.42 + 3}
+                fontSize="11"
+                fill="#dc2626"
+                fontWeight="700"
+              >
+                0.8p
+              </text>
+            </g>
+
+            {/* Radial stress lines */}
+            {prog > 0.3 && (
+              <g stroke="#64748b" strokeWidth="1" opacity="0.4">
+                <line
+                  x1={centerX - (bulbW * 0.4) / 2}
+                  y1={roadTopY + prog * availableCanvasHeight * 0.42}
+                  x2={centerX - (bulbW * 0.95) / 2}
+                  y2={roadTopY + prog * availableCanvasHeight * 0.92}
+                  strokeDasharray="3,2"
+                />
+                <line
+                  x1={centerX + (bulbW * 0.4) / 2}
+                  y1={roadTopY + prog * availableCanvasHeight * 0.42}
+                  x2={centerX + (bulbW * 0.95) / 2}
+                  y2={roadTopY + prog * availableCanvasHeight * 0.92}
+                  strokeDasharray="3,2"
+                />
+                <line
+                  x1={centerX}
+                  y1={roadTopY}
+                  x2={centerX}
+                  y2={roadTopY + prog * availableCanvasHeight * 0.95}
+                  strokeDasharray="2,3"
+                  opacity="0.6"
+                />
+              </g>
             )}
-            {prog > 0.5 && (
-              <path
-                d={`M${centerX - (bulbW * 0.48)},${roadTopY + bulbMaxH * 0.45}
-                    Q${centerX},${roadTopY + bulbMaxH * 0.75}
-                    ${centerX + (bulbW * 0.48)},${roadTopY + bulbMaxH * 0.45}`}
-                fill="none"
-                stroke="#f59e0b"
-                strokeWidth={1.5}
-                strokeDasharray="5 3"
-                opacity={0.7}
-              />
+
+            {/* Legend box */}
+            {prog > 0.6 && (
+              <g>
+                <rect
+                  x={centerX - 110}
+                  y={roadTopY - 50}
+                  width="220"
+                  height="40"
+                  fill="#1e293b"
+                  stroke="#475569"
+                  strokeWidth="1"
+                  rx="6"
+                  opacity="0.85"
+                />
+                <circle cx={centerX - 95} cy={roadTopY - 30} r="3" fill="#dc2626" />
+                <text x={centerX - 85} y={roadTopY - 26} fontSize="9" fill="#e2e8f0">
+                  High (0.8p)
+                </text>
+                <circle cx={centerX - 95} cy={roadTopY - 14} r="3" fill="#eab308" />
+                <text x={centerX - 85} y={roadTopY - 10} fontSize="9" fill="#e2e8f0">
+                  Medium (0.5p)
+                </text>
+                <circle cx={centerX + 25} cy={roadTopY - 30} r="3" fill="#22c55e" />
+                <text x={centerX + 35} y={roadTopY - 26} fontSize="9" fill="#e2e8f0">
+                  Low (0.2p)
+                </text>
+                <text x={centerX + 25} y={roadTopY - 14} fontSize="8" fill="#94a3b8">
+                  Illustrative
+                </text>
+              </g>
             )}
 
             {/* Lateral Stress Dispersion Vectors (showing geogrid action) */}

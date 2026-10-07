@@ -121,7 +121,7 @@ export default function App() {
                 key={tab.id}
                 id={`tab-${tab.id}`}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 focus:outline-2 focus:outline-offset-2 focus-visible:outline-2 focus:outline-blue-400 ${
                   activeTab === tab.id
                     ? 'bg-blue-600 text-white shadow-md shadow-blue-900/50'
                     : 'text-slate-400 hover:text-white hover:bg-slate-700/60'
@@ -137,7 +137,7 @@ export default function App() {
           <div className="flex items-center gap-2 flex-shrink-0">
             <button
               onClick={() => setShowOnboardingTour(true)}
-              className="hidden lg:flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-xs text-slate-300 font-medium whitespace-nowrap transition"
+              className="hidden lg:flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-xs text-slate-300 font-medium whitespace-nowrap transition focus:outline-2 focus:outline-offset-2 focus-visible:outline-2 focus:outline-blue-400"
               title="Start student orientation tour"
             >
               <span>💡</span> Tour
@@ -145,7 +145,7 @@ export default function App() {
 
             <button
               onClick={() => setShowClassroomMode(true)}
-              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-amber-600/40 bg-amber-950/30 hover:bg-amber-900/40 text-xs text-amber-300 font-semibold whitespace-nowrap transition shadow-sm"
+              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-amber-600/40 bg-amber-950/30 hover:bg-amber-900/40 text-xs text-amber-300 font-semibold whitespace-nowrap transition shadow-sm focus:outline-2 focus:outline-offset-2 focus-visible:outline-2 focus:outline-blue-400"
               title="High-contrast projector mode for instructors"
             >
               <span>🎓</span> Classroom
@@ -153,7 +153,7 @@ export default function App() {
 
             <button
               onClick={() => setShowExportModal(true)}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold whitespace-nowrap transition shadow-md shadow-blue-900/40"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold whitespace-nowrap transition shadow-md shadow-blue-900/40 focus:outline-2 focus:outline-offset-2 focus-visible:outline-2 focus:outline-blue-400"
               title="Export watermarked simulation report (PDF / JSON)"
             >
               <span>📄</span> Export
@@ -272,7 +272,7 @@ export default function App() {
             <span>·</span>
             <button
               onClick={() => setShowTermsModal(true)}
-              className="text-amber-400/90 hover:text-amber-300 underline underline-offset-2 transition"
+              className="text-amber-400/90 hover:text-amber-300 underline underline-offset-2 transition focus:outline-2 focus:outline-offset-2 focus-visible:outline-2 focus:outline-blue-400"
             >
               Terms of Use & Legal Disclaimer
             </button>

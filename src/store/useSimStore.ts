@@ -70,6 +70,7 @@ interface SimStore {
   loadScenario: (id: string) => void;
   runSim: () => void;
   resetAnimation: () => void;
+  resetToDefaults: () => void;
 }
 
 const defaultControls: SimControls = {
@@ -267,4 +268,11 @@ export const useSimStore = create<SimStore>((set, get) => ({
       ui: { ...s.ui, animationState: 'idle', animationProgress: 0 },
       result: null,
     })),
+
+  resetToDefaults: () =>
+    set({
+      controls: { ...defaultControls },
+      ui: { ...defaultUI },
+      result: null,
+    }),
 }));
