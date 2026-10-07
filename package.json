@@ -12,7 +12,7 @@
     "lint:fix": "eslint src --ext .ts,.tsx --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,md}\"",
     "type-check": "tsc --noEmit",
-    "test": "vitest",
+    "test": "vitest --run",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "analyze": "rollup-plugin-visualizer"
@@ -37,7 +37,7 @@
     "eslint": "^8.48.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-react": "^7.37.5",
-    "jsdom": "^30.1.2",
+    "happy-dom": "^20.14.5",
     "postcss": "^8.4.0",
     "prettier": "^3.0.0",
     "rollup-plugin-visualizer": "^5.9.0",
