@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { PavementCrossSection } from '../../src/components/PavementCrossSection';
 import { useSimStore } from '../../src/store/useSimStore';
 
@@ -99,6 +99,36 @@ describe('PavementCrossSection Component', () => {
       expect(screen.getByText('0.5p')).toBeDefined();
       expect(screen.getByText('0.8p')).toBeDefined();
       expect(screen.getByText(/Boussinesq Stress Distribution/i)).toBeDefined();
+    });
+
+    it('switches to 2:1 spread angle model when button clicked', () => {
+      useSimStore.getState().setAnimationState('playing');
+      useSimStore.getState().setAnimationProgress(0.7);
+
+      const { container } = render(<PavementCrossSection />);
+      fireEvent.click(screen.getByText(/2:1 Spread Angle/i));
+
+      expect(container.querySelector('#stressAnglesVisualization')).not.toBeNull();
+      expect(screen.getByText(/Trapezoidal Load Dispersion/i)).toBeDefined();
+    });
+
+    it('switches to vertical stress depth curve when button clicked', () => {
+      useSimStore.getState().setAnimationState('playing');
+      useSimStore.getState().setAnimationProgress(0.7);
+
+      const { container } = render(<PavementCrossSection />);
+      fireEvent.click(screen.getByText(/σz vs Depth/i));
+
+      expect(container.querySelector('#stressGraphVisualization')).not.toBeNull();
+      expect(screen.getByText(/Vertical Stress \(σz\) vs Depth/i)).toBeDefined();
+    });
+
+    it('switches to virtual sensor probe mode and updates sensor readout', () => {
+      const { container } = render(<PavementCrossSection />);
+      fireEvent.click(screen.getByText(/Sensor Probe/i));
+
+      expect(container.querySelector('#stressProbeVisualization')).not.toBeNull();
+      expect(screen.getByText(/Sensor Depth:/i)).toBeDefined();
     });
   });
 

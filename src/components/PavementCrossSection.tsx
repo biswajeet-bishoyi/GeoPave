@@ -32,10 +32,12 @@
  * <PavementCrossSection width={540} height={520} />
  */
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSimStore } from '../store/useSimStore';
 import { GEOGRID_CATALOG, GEOTEXTILE_CATALOG } from '@data/geosyntheticSpecs';
 import { VehicleVector } from './VehicleVector';
+
+export type StressVizMode = 'isobars' | 'angles' | 'graph' | 'probe';
 
 interface Props {
   width?: number;
@@ -43,6 +45,9 @@ interface Props {
 }
 
 export const PavementCrossSection: React.FC<Props> = ({ width = 540, height = 520 }) => {
+  const [stressVizMode, setStressVizMode] = useState<StressVizMode>('isobars');
+  const [probeDepthMm, setProbeDepthMm] = useState<number>(390); // default at base/subgrade interface
+
   const { controls, ui, result, setSelectedLayer, setShowMicroView } = useSimStore((s) => ({
     controls: s.controls,
     ui: s.ui,
@@ -200,8 +205,122 @@ export const PavementCrossSection: React.FC<Props> = ({ width = 540, height = 52
   const lateralSpreadFactor = hasGeogrid ? 1.15 : 0.72; // Geogrid spreads lateral confinement
   const bulbW = 85 + bulbMaxH * lateralSpreadFactor;
 
+  // Helper calculations for Probe Mode & Spread Angles
+  const depthBc = th.bc;
+  const depthDbm = depthBc + th.dbm;
+  const depthWmm = depthDbm + th.wmm;
+  const depthGsb = depthWmm + th.gsb;
+
+  let currentProbeLayer = 'Subgrade';
+  if (probeDepthMm <= depthBc) currentProbeLayer = 'Bituminous Concrete (BC)';
+  else if (probeDepthMm <= depthDbm) currentProbeLayer = 'Dense Bituminous Macadam (DBM)';
+  else if (probeDepthMm <= depthWmm) currentProbeLayer = 'Wet Mix Macadam (WMM)';
+  else if (probeDepthMm <= depthGsb) currentProbeLayer = 'Granular Sub-Base (GSB)';
+
+  const sigmaConvAtProbe = 0.56 / (1 + Math.pow(probeDepthMm / 190, 1.65));
+  const sigmaReinfAtProbe = 0.56 / (1 + Math.pow(probeDepthMm / 135, 1.82));
+  const activeProbeSigma = hasGeogrid ? sigmaReinfAtProbe : sigmaConvAtProbe;
+  const probeReductionPercent = Math.max(0, Math.round(((sigmaConvAtProbe - sigmaReinfAtProbe) / sigmaConvAtProbe) * 100));
+
+  const probeY = roadTopY + Math.min(height - roadTopY - 25, (probeDepthMm / totalModelDepthMm) * availableCanvasHeight);
+
   return (
-    <div className="relative select-none">
+    <div className="relative select-none flex flex-col items-center w-full">
+      {/* ─── STRESS VISUALIZATION MODEL SELECTOR ─── */}
+      <div className="w-full flex flex-wrap items-center justify-between gap-1.5 mb-2.5 px-1">
+        <div className="flex items-center gap-1.5 text-xs text-slate-300 font-semibold">
+          <span className="text-slate-400 font-normal">Stress Model:</span>
+        </div>
+        <div className="flex items-center gap-1 bg-slate-900/90 border border-slate-800 rounded-lg p-0.5 shadow-sm">
+          <button
+            type="button"
+            onClick={() => setStressVizMode('isobars')}
+            className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition ${
+              stressVizMode === 'isobars'
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+            title="Boussinesq stress isobars (0.8p, 0.5p, 0.2p bulbs)"
+          >
+            🌀 Boussinesq Isobars
+          </button>
+          <button
+            type="button"
+            onClick={() => setStressVizMode('angles')}
+            className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition ${
+              stressVizMode === 'angles'
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+            title="Trapezoidal 2:1 and 1:1 load dispersion angle envelopes"
+          >
+            📐 2:1 Spread Angle
+          </button>
+          <button
+            type="button"
+            onClick={() => setStressVizMode('graph')}
+            className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition ${
+              stressVizMode === 'graph'
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+            title="Vertical Stress σz vs. Depth profile curve"
+          >
+            📈 σz vs Depth
+          </button>
+          <button
+            type="button"
+            onClick={() => setStressVizMode('probe')}
+            className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition ${
+              stressVizMode === 'probe'
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+            title="Virtual pressure cell sensor probe at any depth"
+          >
+            🎯 Sensor Probe
+          </button>
+        </div>
+      </div>
+
+      {/* Sensor Probe Depth Control (Active in 'probe' mode) */}
+      {stressVizMode === 'probe' && (
+        <div className="w-full flex items-center justify-between gap-2 mb-2 px-3 py-1.5 rounded-lg bg-slate-900/80 border border-slate-800 text-xs shadow-inner">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span className="text-slate-400 font-medium">Sensor Depth:</span>
+            <span className="font-mono text-cyan-400 font-bold">{probeDepthMm} mm</span>
+            <span className="text-[11px] text-slate-500 truncate">({currentProbeLayer})</span>
+          </div>
+          <div className="flex items-center gap-2 flex-1 max-w-[200px] mx-2">
+            <input
+              type="range"
+              min={10}
+              max={1000}
+              step={10}
+              value={probeDepthMm}
+              onChange={(e) => setProbeDepthMm(Number(e.target.value))}
+              className="w-full accent-cyan-400 h-1.5 bg-slate-700 rounded-lg cursor-pointer"
+            />
+          </div>
+          <div className="flex gap-1 flex-shrink-0">
+            <button
+              type="button"
+              onClick={() => setProbeDepthMm(depthBc + depthDbm)}
+              className="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-[10px] text-slate-300 font-mono"
+            >
+              Base
+            </button>
+            <button
+              type="button"
+              onClick={() => setProbeDepthMm(depthGsb)}
+              className="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-[10px] text-slate-300 font-mono"
+            >
+              Subgrade
+            </button>
+          </div>
+        </div>
+      )}
+
       <svg
         role="img"
         aria-label="Flexible pavement cross-section showing load propagation through layers"
@@ -226,6 +345,23 @@ export const PavementCrossSection: React.FC<Props> = ({ width = 540, height = 52
             <stop offset="70%" stopColor="#10b981" stopOpacity="0.25" />
             <stop offset="100%" stopColor="#10b981" stopOpacity="0.0" />
           </radialGradient>
+
+          {/* Load spread angle gradients */}
+          <linearGradient id="coneGradUnreinf" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.28" />
+            <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.06" />
+          </linearGradient>
+          <linearGradient id="coneGradReinf" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.32" />
+            <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.08" />
+          </linearGradient>
+
+          {/* Sensor probe bell curve gradient */}
+          <linearGradient id="probeBellGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.75" />
+            <stop offset="60%" stopColor="#06b6d4" stopOpacity="0.25" />
+            <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.0" />
+          </linearGradient>
 
           {/* Asphalt pattern */}
           <pattern id="pat-asphalt" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
@@ -421,8 +557,8 @@ export const PavementCrossSection: React.FC<Props> = ({ width = 540, height = 52
           </g>
         )}
 
-        {/* ─── 3. PROFESSIONAL BOUSSINESQ STRESS VISUALIZATION & LATERAL RESTRAINT ─── */}
-        {isAnimating && prog > 0.05 && (
+        {/* ─── 3. MULTI-MODEL STRESS VISUALIZATION ─── */}
+        {isAnimating && prog > 0.05 && stressVizMode === 'isobars' && (
           <g id="stressVisualization" style={{ pointerEvents: 'none' }} opacity={Math.min(prog * 1.5, 0.95)}>
             {/* Title */}
             <text
@@ -580,6 +716,217 @@ export const PavementCrossSection: React.FC<Props> = ({ width = 540, height = 52
                 </text>
               </g>
             )}
+          </g>
+        )}
+
+        {/* ─── 3B. TRAPEZOIDAL 2:1 & REINFORCED LOAD SPREAD CONES ─── */}
+        {isAnimating && prog > 0.05 && stressVizMode === 'angles' && (
+          <g id="stressAnglesVisualization" style={{ pointerEvents: 'none' }} opacity={Math.min(prog * 1.5, 0.98)}>
+            {/* Title HUD Card */}
+            <g>
+              <rect
+                x={centerX - 130}
+                y={roadTopY - 50}
+                width="260"
+                height="40"
+                fill="#1e293b"
+                stroke="#475569"
+                strokeWidth="1"
+                rx="6"
+                opacity="0.9"
+              />
+              <text x={centerX} y={roadTopY - 32} fill="#f8fafc" fontSize="10" fontWeight="bold" textAnchor="middle">
+                Trapezoidal Load Dispersion Frustum
+              </text>
+              <text x={centerX} y={roadTopY - 17} fill="#94a3b8" fontSize="9" textAnchor="middle">
+                Conventional: 2V:1H (28°) · Geogrid Reinforced: 1V:1H (42°)
+              </text>
+            </g>
+
+            {/* Conventional 2:1 Cone (Amber Dashed) */}
+            {(() => {
+              const spreadConv = (ySubgrade - roadTopY) * 0.5317 * Math.min(prog * 1.25, 1);
+              const xL = centerX - 32 - spreadConv;
+              const xR = centerX + 32 + spreadConv;
+              return (
+                <g>
+                  <polygon
+                    points={`${centerX - 32},${roadTopY} ${centerX + 32},${roadTopY} ${xR},${ySubgrade} ${xL},${ySubgrade}`}
+                    fill="url(#coneGradUnreinf)"
+                    stroke="#f59e0b"
+                    strokeWidth="1.8"
+                    strokeDasharray="4,3"
+                  />
+                  <text x={centerX - 65} y={roadTopY + 38} fill="#f59e0b" fontSize="9" fontWeight="600">
+                    θ = 28° (2:1)
+                  </text>
+                </g>
+              );
+            })()}
+
+            {/* Reinforced 1:1 Cone (Teal/Cyan Solid) */}
+            {hasGeogrid && (() => {
+              const spreadAtGrid = (geogridY - roadTopY) * 0.5317 * Math.min(prog * 1.25, 1);
+              const spreadReinf = (spreadAtGrid + (ySubgrade - geogridY) * 0.88) * Math.min(prog * 1.25, 1);
+              const xL = centerX - 32 - spreadReinf;
+              const xR = centerX + 32 + spreadReinf;
+              const xGridL = centerX - 32 - spreadAtGrid;
+              const xGridR = centerX + 32 + spreadAtGrid;
+              return (
+                <g>
+                  <polygon
+                    points={`${centerX - 32},${roadTopY} ${centerX + 32},${roadTopY} ${xGridR},${geogridY} ${xR},${ySubgrade} ${xL},${ySubgrade} ${xGridL},${geogridY}`}
+                    fill="url(#coneGradReinf)"
+                    stroke="#06b6d4"
+                    strokeWidth="2.2"
+                  />
+                  <text x={centerX + 60} y={geogridY + 28} fill="#06b6d4" fontSize="10" fontWeight="700">
+                    θ = 42° (Reinforced 1:1)
+                  </text>
+
+                  {/* Subgrade distribution width indicator */}
+                  <line x1={xL} y1={ySubgrade + 16} x2={xR} y2={ySubgrade + 16} stroke="#06b6d4" strokeWidth="1.5" />
+                  <polygon points={`${xL},${ySubgrade + 16} ${xL + 6},${ySubgrade + 13} ${xL + 6},${ySubgrade + 19}`} fill="#06b6d4" />
+                  <polygon points={`${xR},${ySubgrade + 16} ${xR - 6},${ySubgrade + 13} ${xR - 6},${ySubgrade + 19}`} fill="#06b6d4" />
+                  <text x={centerX} y={ySubgrade + 30} fill="#38bdf8" fontSize="10" fontWeight="bold" textAnchor="middle">
+                    Footprint: +68% Wider Load Spread (Subgrade Stress ↓ 41%)
+                  </text>
+                </g>
+              );
+            })()}
+          </g>
+        )}
+
+        {/* ─── 3C. VERTICAL STRESS (σz) VS DEPTH GRAPH ─── */}
+        {isAnimating && prog > 0.05 && stressVizMode === 'graph' && (
+          <g id="stressGraphVisualization" style={{ pointerEvents: 'none' }} opacity={Math.min(prog * 1.5, 0.98)}>
+            {/* Title HUD Card */}
+            <g>
+              <rect
+                x={centerX - 120}
+                y={roadTopY - 50}
+                width="240"
+                height="40"
+                fill="#1e293b"
+                stroke="#475569"
+                strokeWidth="1"
+                rx="6"
+                opacity="0.9"
+              />
+              <text x={centerX} y={roadTopY - 32} fill="#f8fafc" fontSize="10" fontWeight="bold" textAnchor="middle">
+                Vertical Stress (σz) vs Depth
+              </text>
+              <text x={centerX} y={roadTopY - 17} fill="#94a3b8" fontSize="9" textAnchor="middle">
+                🔴 Conventional vs 🟢 Geogrid Reinforced
+              </text>
+            </g>
+
+            {/* Coordinate Grid lines */}
+            {(() => {
+              const gX0 = centerX - 90;
+              const gW = 180;
+              const xForS = (s: number) => gX0 + (s / 0.60) * gW;
+
+              return (
+                <g>
+                  {/* Vertical stress ticks */}
+                  {[0.1, 0.2, 0.3, 0.4, 0.5].map((s) => (
+                    <g key={s}>
+                      <line
+                        x1={xForS(s)}
+                        y1={roadTopY}
+                        x2={xForS(s)}
+                        y2={roadTopY + availableCanvasHeight * 0.9}
+                        stroke="rgba(255,255,255,0.08)"
+                        strokeDasharray="2,2"
+                      />
+                      <text x={xForS(s)} y={roadTopY + 12} fill="#64748b" fontSize="8" textAnchor="middle">
+                        {s}
+                      </text>
+                    </g>
+                  ))}
+
+                  {/* Unreinforced Conventional Curve (Red Dashed) */}
+                  <path
+                    d={`M ${xForS(0.56)},${roadTopY}
+                        Q ${xForS(0.42)},${yDbm} ${xForS(0.28)},${yWmm}
+                        Q ${xForS(0.18)},${yGsb} ${xForS(0.082)},${ySubgrade}
+                        L ${xForS(0.038)},${roadTopY + availableCanvasHeight * 0.9}`}
+                    fill="none"
+                    stroke="#ef4444"
+                    strokeWidth="2.2"
+                    strokeDasharray="4,3"
+                  />
+                  <circle cx={xForS(0.082)} cy={ySubgrade} r="3.5" fill="#ef4444" />
+
+                  {/* Reinforced Curve (Green Solid) */}
+                  <path
+                    d={`M ${xForS(0.56)},${roadTopY}
+                        Q ${xForS(0.40)},${yDbm} ${xForS(0.24)},${yWmm}
+                        Q ${xForS(0.11)},${yGsb} ${xForS(0.048)},${ySubgrade}
+                        L ${xForS(0.021)},${roadTopY + availableCanvasHeight * 0.9}`}
+                    fill="none"
+                    stroke="#10b981"
+                    strokeWidth="2.8"
+                  />
+                  <circle cx={xForS(0.048)} cy={ySubgrade} r="4" fill="#10b981" />
+
+                  {/* Subgrade Callout comparison */}
+                  <g transform={`translate(${centerX - 95}, ${ySubgrade - 24})`}>
+                    <rect width="190" height="20" rx="4" fill="#0f172a" stroke="#10b981" strokeWidth="1" />
+                    <text x="95" y="14" fill="#34d399" fontSize="9" fontWeight="bold" textAnchor="middle">
+                      Subgrade σz: 0.048 MPa vs 0.082 MPa (-41%)
+                    </text>
+                  </g>
+                </g>
+              );
+            })()}
+          </g>
+        )}
+
+        {/* ─── 3D. VIRTUAL PRESSURE CELL SENSOR PROBE ─── */}
+        {stressVizMode === 'probe' && (
+          <g id="stressProbeVisualization" style={{ pointerEvents: 'none' }} opacity={0.98}>
+            {/* Horizontal scanning beam line */}
+            <line
+              x1={0}
+              y1={probeY}
+              x2={width - 55}
+              y2={probeY}
+              stroke="#06b6d4"
+              strokeWidth="2"
+              strokeDasharray="6,2"
+            />
+            <circle cx={centerX} cy={probeY} r="4.5" fill="#06b6d4" stroke="#ffffff" strokeWidth="1.5" />
+
+            {/* Bell curve profile across lane at this slice */}
+            {(() => {
+              const peakH = Math.min(90, activeProbeSigma * 140);
+              return (
+                <g>
+                  <path
+                    d={`M ${centerX - 110},${probeY}
+                        Q ${centerX - 55},${probeY - peakH * 0.15} ${centerX - 30},${probeY - peakH * 0.65}
+                        Q ${centerX},${probeY - peakH} ${centerX + 30},${probeY - peakH * 0.65}
+                        Q ${centerX + 55},${probeY - peakH * 0.15} ${centerX + 110},${probeY} Z`}
+                    fill="url(#probeBellGrad)"
+                    stroke="#22d3ee"
+                    strokeWidth="1.8"
+                  />
+
+                  {/* Probe HUD Readout Box */}
+                  <g transform={`translate(${centerX - 110}, ${Math.max(10, probeY - peakH - 44)})`}>
+                    <rect width="220" height="38" rx="6" fill="#0f172a" stroke="#06b6d4" strokeWidth="1.2" opacity="0.95" />
+                    <text x="110" y="15" fill="#38bdf8" fontSize="10" fontWeight="bold" textAnchor="middle">
+                      Sensor: {probeDepthMm} mm · {currentProbeLayer}
+                    </text>
+                    <text x="110" y="29" fill="#e2e8f0" fontSize="9" textAnchor="middle">
+                      σz = <tspan fill="#38bdf8" fontWeight="bold">{activeProbeSigma.toFixed(3)} MPa</tspan> ({hasGeogrid ? `-${probeReductionPercent}% shielded` : 'unreinforced'})
+                    </text>
+                  </g>
+                </g>
+              );
+            })()}
           </g>
         )}
 
