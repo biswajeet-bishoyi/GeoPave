@@ -134,16 +134,17 @@ export const ControlsPanel: React.FC = () => {
     <div className="space-y-5">
       {/* ── Action: Physical Model Quick Banner ── */}
       <div className="p-3 rounded-xl bg-gradient-to-r from-cyan-950/60 to-blue-950/60 border border-cyan-800/40">
-        <div className="flex items-center justify-between">
-          <div className="text-xs">
-            <span className="font-bold text-cyan-300 block">🧪 Physical Model Ready</span>
-            <span className="text-[11px] text-slate-400">1:10 scaling & viva defense</span>
+        <div className="flex items-center justify-between gap-2.5">
+          <div className="text-xs min-w-0">
+            <span className="font-bold text-cyan-300 block truncate">🧪 Physical Model Ready</span>
+            <span className="text-[11px] text-slate-400 block truncate">1:10 scaling & viva defense</span>
           </div>
           <button
             onClick={() => setActiveTab('physical-model')}
-            className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-cyan-600 hover:bg-cyan-500 text-white transition shadow"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-cyan-600 hover:bg-cyan-500 text-white transition shadow whitespace-nowrap flex-shrink-0 focus:outline-2 focus:outline-offset-2 focus-visible:outline-2 focus:outline-cyan-400"
           >
-            View Specs →
+            <span>View Specs</span>
+            <span aria-hidden="true">→</span>
           </button>
         </div>
       </div>
