@@ -1,20 +1,41 @@
-# GeoPave India — Geosynthetic Reinforced Flexible Pavement Simulator
+# 🛣️ GeoPave India — Geosynthetic Reinforced Flexible Pavement Simulator
 
-An interactive educational visualization tool for understanding flexible pavement construction and geosynthetic reinforcement in Indian road systems.
+<div align="center">
 
-## 🎯 Project Overview
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-Fast-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-v3-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-GeoPave India is designed to teach civil engineering students, educators, and practitioners:
+**An interactive educational visualization and simulation tool for flexible pavement layers and geosynthetic reinforcement in Indian road systems.**
 
-- How wheel loads propagate through pavement layers
-- How geogrid reinforcement improves aggregate confinement
-- How geotextile provides layer separation
-- When and why geosynthetics are appropriate interventions
-- Real-world pavement design considerations based on IRC:37 and IRC:SP:59
+[Report Bug](https://github.com/biswajeet-bishoyi/GeoPave/issues) • [Request Feature](https://github.com/biswajeet-bishoyi/GeoPave/issues)
 
-**Important:** This is an educational visualization tool, NOT a structural pavement design calculator.
+</div>
 
-## ⚡ Quick Start
+---
+
+## 🌟 Project Overview
+
+**GeoPave India** provides civil engineering students, highway engineers, and educators with an intuitive, visual playground to understand the mechanics of flexible pavement design and geosynthetic interventions according to Indian Road Congress guidelines (**IRC:37** and **IRC:SP:59**).
+
+> **Note:** GeoPave India is an educational visualization and conceptual tool designed to illustrate stress propagation, layer interactions, and reinforcement benefits.
+
+---
+
+## 🚀 Key Features
+
+- **🚜 Wheel Load Stress Dissipation**: Visualizes Boussinesq stress bulb distribution through surface bituminous layers, granular base/sub-base, and subgrade soil.
+- **🧱 Geosynthetic Reinforcement Modules**:
+  - **Geogrid Interlock**: Demonstrates lateral aggregate restraint, tension membrane effect, and structural layer reduction.
+  - **Geotextile Separation & Filtration**: Illustrates prevention of subgrade fine migration into the granular sub-base layer.
+- **🇮🇳 IRC Standard Compliance Context**: Explains pavement design principles, California Bearing Ratio (CBR) correlations, and commercial traffic spectrum considerations.
+- **📊 Real-Time Interactive Sliders**: Dynamically modify axle loading, subgrade CBR (%), layer thicknesses, and geosynthetic inclusion to observe stress attenuation curves.
+
+---
+
+## 🛠️ Quick Start
 
 ### Prerequisites
 - Node.js >= 18.0.0
@@ -28,117 +49,28 @@ cd GeoPave
 npm install
 ```
 
-### Development
+### Development Server
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+Open `http://localhost:5173` in your browser.
 
-### Build for Production
+### Production Build
 
 ```bash
 npm run build
-npm run preview
 ```
-
-## 📦 Available Scripts
-
-- `npm run dev` — Start development server with HMR
-- `npm run build` — Build for production
-- `npm run preview` — Preview production build locally
-- `npm run lint` — Run ESLint
-- `npm run lint:fix` — Fix linting errors
-- `npm run format` — Format code with Prettier
-- `npm run type-check` — Check TypeScript types
-- `npm run test` — Run unit tests (watch mode)
-- `npm run test:ui` — Run tests with UI
-- `npm run test:coverage` — Generate coverage report
-- `npm run analyze` — Analyze bundle size
-
-## 🏗️ Project Structure
-
-```
-src/
-├── components/        # React UI components
-├── engine/           # Simulation logic (pure functions)
-├── data/             # Static data (layers, references, scenarios)
-├── types/            # TypeScript interfaces
-├── hooks/            # Custom React hooks
-├── utils/            # Utility functions
-├── App.tsx           # Root component
-├── index.tsx         # Entry point
-└── styles.css        # Global styles (Tailwind)
-```
-
-**See:** [ARCHITECTURE.md](./docs/ARCHITECTURE.md) for detailed component structure.
-
-## 🔬 Engineering Accuracy
-
-### What This Tool Is
-- An educational visualization
-- A conceptual load propagation animator
-- A geosynthetic effect demonstrator
-
-### What This Tool Is NOT
-- A pavement design calculator
-- A finite element analysis (FEM) tool
-- A traffic analysis tool
-- Compliant with IRC:37 design procedures
-
-### All Simulation Outputs Are Labeled
-
-Every metric and indicator is explicitly tagged:
-- **"Conceptual"** — Educational visualization
-- **"Illustrative"** — Relative indicator (not absolute)
-- **"User-defined"** — Input from user selection
-
-**For actual pavement design, refer to IRC:37 and engage a licensed engineer.**
-
-## 📚 References
-
-- **IRC:37-2018** — Guidelines for the Design of Flexible Pavements
-- **IRC:SP:59-2018** — Guidelines for Use of Geosynthetics in Road Pavements
-- **MoRTH Specifications** — Material grades and layer definitions
-- **BIS Standards** — Material properties
-
-## 🎓 Learning Resources
-
-GeoPave India includes:
-- Interactive pavement layer explorer
-- Load propagation visualization
-- Geosynthetic effect comparison
-- Engineering explanations
-- Knowledge check quiz
-
-## ♿ Accessibility
-
-This project aims for **WCAG 2.1 Level AA** compliance:
-- Keyboard navigation (Tab, Enter, Arrow keys)
-- Screen reader support (semantic HTML, ARIA labels)
-- Color contrast >= 4.5:1
-- Reduced motion support (`prefers-reduced-motion`)
-
-## 🚀 Deployment
-
-Deployed on Vercel. See [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md).
-
-## 🤝 Contributing
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
-
-## 📄 License
-
-MIT License. See [LICENSE](./LICENSE).
-
-## 👨‍💼 Author & Contact
-- **Author:** Biswajeet Bishoyi
-- **Email:** [bishoyibiswajeet@gmail.com](mailto:bishoyibiswajeet@gmail.com)
-- **Repository:** [https://github.com/biswajeet-bishoyi/GeoPave](https://github.com/biswajeet-bishoyi/GeoPave)
 
 ---
 
-**Version:** 0.2.0  
-**Last Updated:** 2026-10-06  
-**Status:** Exhibition & College Project Ready
+## 📄 License
+
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+
+---
+
+<div align="center">
+Developed by <a href="https://github.com/biswajeet-bishoyi">Biswajeet Bishoyi</a>
+</div>
